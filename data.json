@@ -1,0 +1,19 @@
+{
+    "mqtt":
+    {   
+        "broker": "140.128.99.71",
+        "port": "1883",
+        "username":"course",
+        "password": "iot999",
+        "subscribe_topic":"GIOT-GW/UL/1C497BFA3280",
+        "//subscribe_topic": "AS-M156-02/sensor"
+    },
+    "db":
+    {
+        "host":"localhost",
+        "database":"pass",
+        "user": "root",
+        "password": "",
+        "port":58408
+    }
+}

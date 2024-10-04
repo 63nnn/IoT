@@ -1,13 +1,18 @@
-import json
-import paho.mqtt.client as mqtt
-import datetime as datetimeLibrary
 import mysql.connector
 from mysql.connector import Error
+import paho.mqtt.client as mqtt
+import json
+import datetime as datetimeLibrary  # to record into DB
+
+
+with open("data.json", "r") as file:
+    jj = json.load(file)
+
 
 LORA_NODE_MAC = "0000000033000016"
 
 
-def on_connect(client, userdata, flags, reason_code, properties):
+def on_connect(client, userdata, flags, reason_code, properties, sub_topic):
     # 將訂閱主題寫在on_connet中
     # 如果我們失去連線或重新連線時
     # 地端程式將會重新訂閱
@@ -17,7 +22,7 @@ def on_connect(client, userdata, flags, reason_code, properties):
         print(f"Connected with result code: {reason_code}")
         # we should always subscribe from on_connect callback to be sure
         # our subscribed is persisted across reconnections.
-        client.subscribe("GIOT-GW/UL/1C497BFA3280")  # << subscribe here
+        client.subscribe(sub_topic)  # << subscribe here
 
 
 # 當接收到從伺服器發送的訊息時要進行的動作
@@ -61,7 +66,7 @@ def on_message(client, userdata, msg):
         )
 
         # 新增資料
-        sql = "INSERT INTO `history` (gateway_id,lora_node_mac,temperature,humidity,tvoc,co2,pm25,timestamp,datetime) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+        sql = "INSERT INTO history (gateway_id,lora_node_mac,temperature,humidity,tvoc,co2,pm25,timestamp,datetime) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);"
         new_data = (
             gwid,
             macAddr,
@@ -90,7 +95,9 @@ def on_message(client, userdata, msg):
 
 # 連線設定
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)  # 初始化地端程式
-client.on_connect = on_connect  # 設定連線的動作
+client.on_connect = on_connect(
+    sub_topic=jj["mqtt"]["subscribe_topic"]
+)  # 設定連線的動作
 client.on_message = on_message  # 設定接收訊息的動作
 
 client.username_pw_set("course", "iot999")  # 設定登入帳號密碼
