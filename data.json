@@ -5,8 +5,8 @@
         "port": "1883",
         "username":"course",
         "password": "iot999",
-        "subscribe_topic":"GIOT-GW/UL/1C497BFA3280",
-        "//subscribe_topic": "AS-M156-02/sensor"
+        "//subscribe_topic":"GIOT-GW/UL/1C497BFA3280",
+        "subscribe_topic": "AS-M156-02/sensor"
     },
     "db":
     {

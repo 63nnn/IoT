@@ -38,6 +38,7 @@ def on_message(client, userdata, msg):
     if data_length != 26:
         print("MQTT - Parse data - this data length is wrong")
         return
+    print(f"\n{len(receive_data)}\n")
 
     temperature = receive_data[0:2] + "." + receive_data[2:4]
     humidity = receive_data[4:6] + "." + receive_data[6:8]
